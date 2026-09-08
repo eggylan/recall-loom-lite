@@ -23,6 +23,7 @@ func NewRootCommand(version string) *cobra.Command {
 	root.AddCommand(newStatusCmd())
 	root.AddCommand(newResumeCmd())
 	root.AddCommand(newQueryCmd())
+	root.AddCommand(newArchiveCmd())
 	return root
 }
 
