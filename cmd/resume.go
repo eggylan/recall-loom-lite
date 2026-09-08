@@ -46,8 +46,14 @@ func newResumeCmd() *cobra.Command {
 			}
 			var entries []journal.Entry
 			var latestDate string
+			var rawLog string
 			if latest != nil {
-				entries, err = journal.ReadEntries(*latest)
+				raw, err := os.ReadFile(latest.Path)
+				if err != nil {
+					return err
+				}
+				rawLog = string(raw)
+				entries, err = journal.Parse(rawLog)
 				if err != nil {
 					return err
 				}
@@ -90,11 +96,7 @@ func newResumeCmd() *cobra.Command {
 			fmt.Fprint(out, summary)
 			fmt.Fprint(out, "\n## Daily Log: "+latestDate+"\n\n")
 			if latest != nil {
-				data, err := os.ReadFile(latest.Path)
-				if err != nil {
-					return err
-				}
-				fmt.Fprint(out, string(data))
+				fmt.Fprint(out, rawLog)
 			} else {
 				fmt.Fprintln(out, "(no daily logs yet)")
 			}

@@ -78,3 +78,17 @@ func TestRunMissingCoreDocs(t *testing.T) {
 		t.Fatalf("missing core docs not flagged: %+v", findings)
 	}
 }
+
+func TestRunNoFalsePositives(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "context_brief.md"), "---\nschema_version: 1\n---\n\n# ok\n")
+	writeFile(t, filepath.Join(root, "rolling_summary.md"), "---\nschema_version: 1\n---\n\n# ok\n")
+	// shape-valid but clock-invalid header must NOT be flagged (format-only design)
+	writeFile(t, filepath.Join(root, "daily_logs", "2026-09-08.md"),
+		"---\nschema_version: 1\n---\n\n## 25:99 night shift\n\nbody\n")
+	// update_protocol.md absent and archive/ absent — neither may produce findings
+	findings := Run(root)
+	if len(findings) != 0 {
+		t.Fatalf("false positives: %+v", findings)
+	}
+}
