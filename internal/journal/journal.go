@@ -94,7 +94,7 @@ func Append(rllRoot, date string, e Entry) (string, error) {
 	case err != nil:
 		return "", err
 	default:
-		content = strings.TrimRight(string(data), "\n") + "\n\n" + RenderEntry(e)
+		content = strings.TrimRight(strings.ReplaceAll(string(data), "\r\n", "\n"), "\n") + "\n\n" + RenderEntry(e)
 	}
 	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 		return "", err

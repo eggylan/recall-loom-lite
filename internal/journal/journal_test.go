@@ -81,3 +81,22 @@ func TestParseEntries(t *testing.T) {
 		t.Fatalf("entry1 = %+v", entries[1])
 	}
 }
+
+func TestAppendToCRLFFile(t *testing.T) {
+	root := t.TempDir()
+	path := filepath.Join(root, "daily_logs")
+	if err := os.MkdirAll(path, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	crlf := "---\r\nschema_version: 1\r\n---\r\n\r\n## 10:30 first\r\n\r\nbody\r\n"
+	if err := os.WriteFile(filepath.Join(path, "2026-09-08.md"), []byte(crlf), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Append(root, "2026-09-08", Entry{Time: "11:00", Title: "second", Body: "b"}); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(filepath.Join(path, "2026-09-08.md"))
+	if strings.Contains(string(data), "\r") {
+		t.Fatalf("CRLF residue after append: %q", data)
+	}
+}
