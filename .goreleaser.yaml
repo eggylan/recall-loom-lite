@@ -1,0 +1,39 @@
+version: 2
+
+project_name: rll
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: rll
+    main: .
+    binary: rll
+    env: [CGO_ENABLED=0]
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+
+archives:
+  - id: binaries
+    ids: [rll]
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+  - id: skill
+    meta: true
+    name_template: "{{ .ProjectName }}_skill"
+    formats: [tar.gz]
+    files:
+      - src: "skill/*"
+        dst: "rll-skill"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
