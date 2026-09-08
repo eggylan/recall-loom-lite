@@ -22,6 +22,7 @@ func NewRootCommand(version string) *cobra.Command {
 	root.AddCommand(newValidateCmd())
 	root.AddCommand(newStatusCmd())
 	root.AddCommand(newResumeCmd())
+	root.AddCommand(newQueryCmd())
 	return root
 }
 
