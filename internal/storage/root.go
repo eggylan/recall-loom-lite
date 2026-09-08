@@ -2,6 +2,7 @@ package storage
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -43,4 +44,19 @@ func CwdRoot() (string, error) {
 		return "", err
 	}
 	return Root(cwd)
+}
+
+// CheckInitTarget validates that rll is usable as a fresh sidecar root:
+// it must be absent. An existing directory or file is an error.
+func CheckInitTarget(rll string) error {
+	fi, err := os.Stat(rll)
+	switch {
+	case err == nil && fi.IsDir():
+		return fmt.Errorf("%s already exists", rll)
+	case err == nil:
+		return fmt.Errorf("%s exists and is not a directory", rll)
+	case !os.IsNotExist(err):
+		return fmt.Errorf("stat %s: %w", rll, err)
+	}
+	return nil
 }

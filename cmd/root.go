@@ -10,9 +10,11 @@ import (
 // NewRootCommand builds the rll command tree.
 func NewRootCommand(version string) *cobra.Command {
 	root := &cobra.Command{
-		Use:     "rll",
-		Short:   "RecallLoom Lite - lightweight file-based project memory",
-		Version: version,
+		Use:           "rll",
+		Short:         "RecallLoom Lite - lightweight file-based project memory",
+		Version:       version,
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
 	root.AddCommand(newInitCmd())
 	return root

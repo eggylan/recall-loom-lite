@@ -26,8 +26,8 @@ func newInitCmd() *cobra.Command {
 				target = root
 			}
 			rll := filepath.Join(target, storage.DirName)
-			if fi, err := os.Stat(rll); err == nil && fi.IsDir() {
-				return fmt.Errorf("%s already exists", rll)
+			if err := storage.CheckInitTarget(rll); err != nil {
+				return err
 			}
 			if err := os.MkdirAll(filepath.Join(rll, "daily_logs"), 0o755); err != nil {
 				return err
@@ -43,7 +43,7 @@ func newInitCmd() *cobra.Command {
 			if root, ok := storage.GitRoot(target); ok {
 				msg, err := storage.EnsureGitExclude(root)
 				if err != nil {
-					fmt.Fprintf(out, "warning: git exclude: %v\n", err)
+					fmt.Fprintf(cmd.ErrOrStderr(), "warning: git exclude: %v\n", err)
 				} else {
 					fmt.Fprintf(out, "git: %s\n", msg)
 				}
