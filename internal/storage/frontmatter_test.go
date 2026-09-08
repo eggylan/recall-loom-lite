@@ -54,3 +54,33 @@ func TestRenderDocumentEmptyBody(t *testing.T) {
 		t.Fatalf("RenderDocument(\"\") = %q", out)
 	}
 }
+
+func TestParseDocumentCRLF(t *testing.T) {
+	doc, err := ParseDocument("---\r\nschema_version: 1\r\n---\r\n\r\n# Title\r\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !doc.HasSchemaVersion() {
+		t.Fatal("want schema_version detected in CRLF file")
+	}
+	if doc.Body != "# Title\n" {
+		t.Fatalf("Body = %q", doc.Body)
+	}
+}
+
+func TestHasSchemaVersionRejectsWrongValues(t *testing.T) {
+	bad := []string{
+		"---\nschema_version: 2\n---\n\nx\n",
+		"---\nschema_version: foo\n---\n\nx\n",
+		"---\nother: 1\n---\n\nx\n",
+	}
+	for _, content := range bad {
+		doc, err := ParseDocument(content)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if doc.HasSchemaVersion() {
+			t.Fatalf("want HasSchemaVersion false for %q", content)
+		}
+	}
+}

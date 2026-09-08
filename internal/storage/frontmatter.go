@@ -19,6 +19,7 @@ type Document struct {
 // ParseDocument splits a managed file into frontmatter and body.
 // A file without frontmatter parses successfully with an empty Frontmatter map.
 func ParseDocument(content string) (*Document, error) {
+	content = strings.ReplaceAll(content, "\r\n", "\n")
 	if !strings.HasPrefix(content, "---\n") {
 		return &Document{Frontmatter: map[string]any{}, Body: content}, nil
 	}

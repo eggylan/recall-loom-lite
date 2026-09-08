@@ -46,11 +46,11 @@ func EnsureGitExclude(repoRoot string) (string, error) {
 	defer f.Close()
 	if len(content) > 0 && !strings.HasSuffix(content, "\n") {
 		if _, err := f.WriteString("\n"); err != nil {
-			return "", err
+			return "", fmt.Errorf("write newline: %w", err)
 		}
 	}
 	if _, err := f.WriteString(".rll/\n"); err != nil {
-		return "", err
+		return "", fmt.Errorf("append .rll/: %w", err)
 	}
 	return "added .rll/ to .git/info/exclude", nil
 }
