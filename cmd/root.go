@@ -20,6 +20,7 @@ func NewRootCommand(version string) *cobra.Command {
 	root.AddCommand(newLogCmd())
 	root.AddCommand(newWriteCmd())
 	root.AddCommand(newValidateCmd())
+	root.AddCommand(newStatusCmd())
 	return root
 }
 
