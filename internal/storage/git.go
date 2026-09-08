@@ -7,18 +7,30 @@ import (
 	"strings"
 )
 
-// GitRoot returns the repository root if dir is inside a git work tree.
-func GitRoot(dir string) (string, bool) {
-	for {
-		if _, err := os.Stat(filepath.Join(dir, ".git")); err == nil {
-			return dir, true
-		}
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			return "", false
-		}
-		dir = parent
+// IsGitRoot reports whether dir itself is the root of a valid git
+// repository, i.e. dir/.git exists with the minimal repository layout
+// created by git init (HEAD file, objects/ and refs/ directories).
+// A mere .git placeholder directory (e.g. empty) is not a repository.
+func IsGitRoot(dir string) bool {
+	gitDir := filepath.Join(dir, ".git")
+	fi, err := os.Stat(gitDir)
+	if err != nil || !fi.IsDir() {
+		// Missing, or .git is a file (linked worktree): unsupported.
+		return false
 	}
+	head, err := os.Stat(filepath.Join(gitDir, "HEAD"))
+	if err != nil || !head.Mode().IsRegular() {
+		return false
+	}
+	objects, err := os.Stat(filepath.Join(gitDir, "objects"))
+	if err != nil || !objects.IsDir() {
+		return false
+	}
+	refs, err := os.Stat(filepath.Join(gitDir, "refs"))
+	if err != nil || !refs.IsDir() {
+		return false
+	}
+	return true
 }
 
 // EnsureGitExclude idempotently appends ".rll/" to the repository's

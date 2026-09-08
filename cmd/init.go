@@ -20,12 +20,7 @@ func newInitCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			// Prefer the git repository root so .rll lives beside .git.
-			target := cwd
-			if root, ok := storage.GitRoot(cwd); ok {
-				target = root
-			}
-			rll := filepath.Join(target, storage.DirName)
+			rll := filepath.Join(cwd, storage.DirName)
 			if err := storage.CheckInitTarget(rll); err != nil {
 				return err
 			}
@@ -40,13 +35,15 @@ func newInitCmd() *cobra.Command {
 			}
 			out := cmd.OutOrStdout()
 			fmt.Fprintf(out, "initialized %s\n", rll)
-			if root, ok := storage.GitRoot(target); ok {
-				msg, err := storage.EnsureGitExclude(root)
+			if storage.IsGitRoot(cwd) {
+				msg, err := storage.EnsureGitExclude(cwd)
 				if err != nil {
 					fmt.Fprintf(cmd.ErrOrStderr(), "warning: git exclude: %v\n", err)
 				} else {
 					fmt.Fprintf(out, "git: %s\n", msg)
 				}
+			} else {
+				fmt.Fprintln(out, "git: skipped (current directory is not a git repository root)")
 			}
 			fmt.Fprintln(out, "next: fill context_brief.md and rolling_summary.md, e.g.")
 			fmt.Fprintln(out, "  rll write brief   (body via stdin, no frontmatter needed)")
