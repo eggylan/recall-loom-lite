@@ -30,7 +30,7 @@ archives:
     formats: [tar.gz]
     files:
       - src: "skill/*"
-        dst: "rll-skill"
+        dst: "."
 
 checksum:
   name_template: "checksums.txt"

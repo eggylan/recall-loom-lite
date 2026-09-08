@@ -32,12 +32,15 @@ func newResumeCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			read := func(name string) (string, bool) {
+			read := func(name string) (string, bool, error) {
 				data, err := os.ReadFile(filepath.Join(root, name))
-				if err != nil {
-					return "", false
+				if os.IsNotExist(err) {
+					return "", false, nil
 				}
-				return string(data), true
+				if err != nil {
+					return "", false, fmt.Errorf("read %s: %w", name, err)
+				}
+				return string(data), true, nil
 			}
 
 			latest, err := journal.Latest(root)
@@ -59,9 +62,18 @@ func newResumeCmd() *cobra.Command {
 				}
 				latestDate = latest.Date
 			}
-			protocol, hasProtocol := read("update_protocol.md")
-			brief, _ := read("context_brief.md")
-			summary, _ := read("rolling_summary.md")
+			protocol, hasProtocol, err := read("update_protocol.md")
+			if err != nil {
+				return err
+			}
+			brief, _, err := read("context_brief.md")
+			if err != nil {
+				return err
+			}
+			summary, _, err := read("rolling_summary.md")
+			if err != nil {
+				return err
+			}
 
 			if asJSON {
 				out := resumeJSON{

@@ -52,7 +52,11 @@ func newQueryCmd() *cobra.Command {
 
 			for _, s := range sources {
 				data, err := os.ReadFile(s.path)
+				if os.IsNotExist(err) {
+					continue
+				}
 				if err != nil {
+					fmt.Fprintf(cmd.ErrOrStderr(), "warning: skip %s: %v\n", s.rel, err)
 					continue
 				}
 				var printedHeader bool

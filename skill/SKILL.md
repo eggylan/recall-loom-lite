@@ -30,7 +30,7 @@ log. Read it, then act. Do not read the files again — resume already gave you 
 | `rll validate` | Check file formats only (5 structural checks) |
 | `rll archive --before YYYY-MM-DD` | Preview moving old logs to `.rll/archive/` (`--apply` to move) |
 
-All write commands accept `--dry-run` to preview rendered output and `--file PATH`
+Both `rll write` and `rll log append` accept `--dry-run` to preview rendered output and `--file PATH`
 instead of stdin. Timestamps and dates default to local time; override with
 `--date`/`--time` when backfilling.
 

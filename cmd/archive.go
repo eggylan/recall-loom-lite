@@ -57,6 +57,9 @@ func newArchiveCmd() *cobra.Command {
 			}
 			for _, l := range toMove {
 				dst := filepath.Join(dstDir, l.Date+".md")
+				if _, err := os.Stat(dst); err == nil {
+					return fmt.Errorf("archive target already exists: %s", dst)
+				}
 				if err := os.Rename(l.Path, dst); err != nil {
 					return err
 				}

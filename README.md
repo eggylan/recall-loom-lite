@@ -51,7 +51,7 @@ rll resume                    # 冷启动：一次输出全部记忆
 | `rll validate` | 五项纯格式检查 |
 | `rll archive --before 日期` | 归档旧日志（默认预览，--apply 执行） |
 
-所有写命令支持 `--dry-run` 预览与 `--file` 从文件读入。时间戳默认取本机
+`rll write` 与 `rll log append` 支持 `--dry-run` 预览与 `--file` 从文件读入。时间戳默认取本机
 时间，可用 `--date`/`--time` 补录。
 
 ## 设计取舍
