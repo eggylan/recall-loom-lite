@@ -14,6 +14,7 @@ func NewRootCommand(version string) *cobra.Command {
 		Short:   "RecallLoom Lite - lightweight file-based project memory",
 		Version: version,
 	}
+	root.AddCommand(newInitCmd())
 	return root
 }
 
