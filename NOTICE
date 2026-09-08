@@ -1,0 +1,6 @@
+RecallLoom Lite (rll)
+Copyright 2026 eggylan
+
+This product is an independent Go reimplementation inspired by RecallLoom,
+licensed under Apache License 2.0. It reuses no source code from the
+original project.
