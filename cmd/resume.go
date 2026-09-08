@@ -81,14 +81,14 @@ func newResumeCmd() *cobra.Command {
 			}
 			fmt.Fprintf(out, "protocol: %s\n", map[bool]string{true: "present", false: "absent"}[hasProtocol])
 			if hasProtocol {
-				fmt.Fprintln(out, "\n## Update Protocol\n")
+				fmt.Fprint(out, "\n## Update Protocol\n\n")
 				fmt.Fprint(out, protocol)
 			}
-			fmt.Fprintln(out, "\n## Context Brief\n")
+			fmt.Fprint(out, "\n## Context Brief\n\n")
 			fmt.Fprint(out, brief)
-			fmt.Fprintln(out, "\n## Rolling Summary\n")
+			fmt.Fprint(out, "\n## Rolling Summary\n\n")
 			fmt.Fprint(out, summary)
-			fmt.Fprintln(out, "\n## Daily Log: " + latestDate + "\n")
+			fmt.Fprint(out, "\n## Daily Log: "+latestDate+"\n\n")
 			if latest != nil {
 				data, err := os.ReadFile(latest.Path)
 				if err != nil {
