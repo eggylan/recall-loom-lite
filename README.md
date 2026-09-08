@@ -61,7 +61,7 @@ rll resume                    # 冷启动：一次输出全部记忆
   成功率优先；记录被人为改动属于正常使用，由开发者自行负责。
 - **CLI 与 Skill 分离**：同一 Release 携带全部平台二进制与 skill 压缩包。
 
-本项目是受 RecallLoom 启发的独立 Go 重写（见 NOTICE），不与其数据格式兼容。
+本项目是受 [RecallLoom](https://github.com/Frappucc1no/recall-loom) 启发的独立 Go 重写（见 NOTICE），不与其数据格式兼容。
 
 ## 许可证
 
